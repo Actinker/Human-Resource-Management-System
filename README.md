@@ -32,7 +32,7 @@ A simple and functional **Human Resource Management System** built using **Sprin
 ---
 
 ## ⚙️ Tech Stack
-
+```
 | Layer       | Technology           |
 |-------------|----------------------|
 | Backend     | Spring Boot (Java)   |
@@ -40,11 +40,11 @@ A simple and functional **Human Resource Management System** built using **Sprin
 | Database    | PostgreSQL           |
 | ORM         | Spring Data JPA      |
 | Build Tool  | Maven                |
-
+```
 ---
 
 ## 📁 Project Structure
-
+```
 src/
 ├── main/
 │ ├── java/
@@ -55,7 +55,7 @@ src/
 │ │ ├── static/ # HTML, CSS, JS frontend
 │ │ ├── application.properties
 ├── pom.xml
-
+```
 ---
 
 ## 🛠️ Setup & Run
@@ -80,10 +80,11 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 
 ## ▶️ Running the App
 # In the project root:
+```
 mvn spring-boot:run
 Open your browser at:
 http://localhost:8080/login.html
-
+```
 ## 📦 API Endpoints
 - Entity	Base URL
 - Employees	/api/employees
@@ -107,5 +108,7 @@ Use fetch() in JS to interact with these APIs for CRUD operations.
 - Generate salary report
 
 - Logout when done
+
+---
 
 🔗 Made with ❤️
