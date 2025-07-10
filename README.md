@@ -83,18 +83,8 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 mvn spring-boot:run
 Open your browser at:
-http://localhost:8080/login.html
+[http://localhost:8080](http://localhost:8080/myapp/)
 ```
-## 📦 API Endpoints
-- Entity	Base URL
-- Employees	/api/employees
-- Departments	/api/departments
-- Leaves	/api/leaves
-- Users	/api/users
-- States	/api/states
-- Salaries	/api/salary-report
-
-Use fetch() in JS to interact with these APIs for CRUD operations.
 
 ## 🧪 Usage Flow
 - Login as admin or user
