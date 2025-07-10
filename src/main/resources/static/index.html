@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRMS Dashboard</title>
+  <link rel="stylesheet" href="styles.css" type="text/css"/>
+  <style>
+    /* Login page styles */
+    .login-form {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-form h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .login-form .form-group {
+      margin-bottom: 20px;
+    }
+
+    .login-form label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .login-form input:focus {
+      border-color: #4a90e2;
+      outline: none;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 12px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-form button:hover {
+      background: #357abd;
+    }
+
+    /* Header styles */
+    .header {
+      background: #f8f9fa;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .header h1 {
+      margin: 0 0 15px 0;
+      color: #333;
+    }
+
+    .user-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-info {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #c82333;
+    }
+
+    /* Password input style fix */
+    #newPassword {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+  <script>
+    // Check if user is logged in
+    window.onload = function() {
+      const userRole = localStorage.getItem('userRole');
+      const username = localStorage.getItem('username');
+      
+      if (!userRole || !username) {
+        showSection('login');
+        return;
+      }
+
+      // Show/hide admin features
+      const adminFeatures = document.querySelectorAll('.admin-only');
+      adminFeatures.forEach(feature => {
+        feature.style.display = userRole === 'ADMIN' ? 'block' : 'none';
+      });
+
+      // Show username and logout button
+      document.getElementById('userInfo').textContent = `Welcome, ${username} (${userRole})`;
+      
+      // Initialize the page
+      showSection('dashboard');
+      showSection('employees');
+      // Set default values for salary report
+      const now = new Date();
+      document.getElementById("salaryMonth").value = now.getMonth() + 1;
+      document.getElementById("salaryYear").value = now.getFullYear();
+    };
+
+    function logout() {
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('username');
+      showSection('login');
+    }
+  </script>
+</head>
+<body>
+<div class="container">
+  <!-- Login Section -->
+  <div id="login" class="section">
+    <div class="login-form">
+      <h1>HRMS Login</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Section -->
+  <div id="dashboard" class="section" style="display: none;">
+    <div class="header">
+      <h1 style="color: #0c7ff2;">Human Resource Management System</h1>
+      <div class="user-controls">
+        <span id="userInfo" class="user-info"></span>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="button-group">
+      <button onclick="showSection('employees')">Manage Employees</button>
+      <button onclick="showSection('departments')">Manage Departments</button>
+      <button onclick="showSection('leaves')">Manage Leaves</button>
+      <button onclick="showSection('salary')">View Salary Sheet</button>
+      <button onclick="showSection('users')" class="admin-only" style="display: none;">Manage Users</button>
+    </div>
+
+    <!-- Manage Employees Section -->
+    <div id="employees" class="section">
+      <h2>Employees</h2>
+      <table id="employeeTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>DOB</th>
+            <th>Contact</th>
+            <th>Base Salary</th>
+            <th>Department</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+      
+      <div class="form-container">
+        <h3>Add New Employee</h3>
+        <form id="employeeForm">
+          <div class="form-group">
+            <label for="empCode">Employee Code</label>
+            <input type="text" id="empCode" placeholder="Enter employee code" required />
+          </div>
+          <div class="form-group">
+            <label for="empName">Name</label>
+            <input type="text" id="empName" placeholder="Enter employee name" required />
+          </div>
+          <div class="form-group">
+            <label for="empDob">Date of Birth</label>
+            <input type="date" id="empDob" required />
+          </div>
+          <div class="form-group">
+            <label for="empContact">Contact Number</label>
+            <input type="text" id="empContact" placeholder="Enter contact number" required />
+          </div>
+          <div class="form-group">
+            <label for="empAddress1">Address Line 1</label>
+            <input type="text" id="empAddress1" placeholder="Enter address line 1" required />
+          </div>
+          <div class="form-group">
+            <label for="empAddress2">Address Line 2</label>
+            <input type="text" id="empAddress2" placeholder="Enter address line 2" />
+          </div>
+          <div class="form-group">
+            <label for="empAddress3">Address Line 3</label>
+            <input type="text" id="empAddress3" placeholder="Enter address line 3" />
+          </div>
+          <div class="form-group">
+            <label for="empPincode">Pincode</label>
+            <input type="text" id="empPincode" placeholder="Enter pincode" required />
+          </div>
+          <div class="form-group">
+            <label for="empStateId">State</label>
+            <select id="empStateId" required>
+              <option value="">Select State</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="empSalary">Base Salary</label>
+            <input type="number" id="empSalary" placeholder="Enter base salary" required />
+          </div>
+          <div class="form-group">
+            <label for="empDeptId">Department</label>
+            <select id="empDeptId" required>
+              <option value="">Select Department</option>
+            </select>
+          </div>
+          <button type="submit">Add Employee</button>
+        </form>
+      </div>
+
+      <div class="form-container" id="editFormContainer" style="display: none;">
+        <h3>Edit Employee</h3>
+        <form id="editEmployeeForm">
+          <input type="hidden" id="editEmpId" />
+          <div class="form-group">
+            <label for="editEmpCode">Employee Code</label>
+            <input type="text" id="editEmpCode" placeholder="Enter employee code" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpName">Name</label>
+            <input type="text" id="editEmpName" placeholder="Enter employee name" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpDob">Date of Birth</label>
+            <input type="date" id="editEmpDob" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpContact">Contact Number</label>
+            <input type="text" id="editEmpContact" placeholder="Enter contact number" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpAddress1">Address Line 1</label>
+            <input type="text" id="editEmpAddress1" placeholder="Enter address line 1" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpAddress2">Address Line 2</label>
+            <input type="text" id="editEmpAddress2" placeholder="Enter address line 2" />
+          </div>
+          <div class="form-group">
+            <label for="editEmpAddress3">Address Line 3</label>
+            <input type="text" id="editEmpAddress3" placeholder="Enter address line 3" />
+          </div>
+          <div class="form-group">
+            <label for="editEmpPincode">Pincode</label>
+            <input type="text" id="editEmpPincode" placeholder="Enter pincode" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpStateId">State</label>
+            <select id="editEmpStateId" required>
+              <option value="">Select State</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editEmpSalary">Base Salary</label>
+            <input type="number" id="editEmpSalary" placeholder="Enter base salary" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmpDeptId">Department</label>
+            <select id="editEmpDeptId" required>
+              <option value="">Select Department</option>
+            </select>
+          </div>
+          <button type="submit">Update Employee</button>
+          <button type="button" onclick="cancelEdit()">Cancel</button>
+        </form>
+      </div>
+
+      <button onclick="fetchEmployees()">Reload Employees</button>
+    </div>
+
+    <!-- Manage Departments Section -->
+    <div id="departments" class="section" style="display: none;">
+      <h2>Departments</h2>
+      <table id="departmentTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Department Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+      
+      <div class="form-container">
+        <h3>Add New Department</h3>
+        <form id="departmentForm">
+          <div class="form-group">
+            <label for="deptName">Department Name</label>
+            <input type="text" id="deptName" placeholder="Enter department name" required />
+          </div>
+          <button type="submit">Add Department</button>
+        </form>
+      </div>
+
+      <div class="form-container" id="editDeptFormContainer" style="display: none;">
+        <h3>Edit Department</h3>
+        <form id="editDepartmentForm">
+          <input type="hidden" id="editDeptId" />
+          <div class="form-group">
+            <label for="editDeptName">Department Name</label>
+            <input type="text" id="editDeptName" placeholder="Enter department name" required />
+          </div>
+          <button type="submit">Update Department</button>
+          <button type="button" onclick="cancelDeptEdit()">Cancel</button>
+        </form>
+      </div>
+
+      <button onclick="fetchDepartments()">Reload Departments</button>
+    </div>
+
+    <!-- Manage Leaves Section -->
+    <div id="leaves" class="section" style="display: none;">
+      <h2>Leave Records</h2>
+      <table id="leaveTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Employee Name</th>
+            <th>Date</th>
+            <th>Half Day</th>
+            <th>Remarks</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+      
+      <div class="form-container">
+        <h3>Add New Leave Record</h3>
+        <form id="leaveForm">
+          <div class="form-group">
+            <label for="leaveEmployeeId">Employee</label>
+            <select id="leaveEmployeeId" required>
+              <option value="">Select Employee</option>
+              <!-- Will be populated dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="leaveDate">Leave Date</label>
+            <input type="date" id="leaveDate" required />
+          </div>
+          <div class="form-group">
+            <label for="leaveHalfDay">Half Day</label>
+            <div class="checkbox-group">
+              <input type="checkbox" id="leaveHalfDay" />
+              <label for="leaveHalfDay">Yes</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="leaveRemarks">Remarks</label>
+            <textarea id="leaveRemarks" placeholder="Enter remarks here..." required></textarea>
+          </div>
+          <button type="submit">Add Leave Record</button>
+        </form>
+      </div>
+
+      <div class="form-container" id="editLeaveFormContainer" style="display: none;">
+        <h3>Edit Leave Record</h3>
+        <form id="editLeaveForm">
+          <input type="hidden" id="editLeaveId" />
+          <div class="form-group">
+            <label for="editLeaveEmployeeId">Employee</label>
+            <select id="editLeaveEmployeeId" required>
+              <option value="">Select Employee</option>
+              <!-- Will be populated dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editLeaveDate">Leave Date</label>
+            <input type="date" id="editLeaveDate" required />
+          </div>
+          <div class="form-group">
+            <label for="editLeaveHalfDay">Half Day</label>
+            <div class="checkbox-group">
+              <input type="checkbox" id="editLeaveHalfDay" />
+              <label for="editLeaveHalfDay">Yes</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editLeaveRemarks">Remarks</label>
+            <textarea id="editLeaveRemarks" placeholder="Enter remarks here..." required></textarea>
+          </div>
+          <button type="submit">Update Leave Record</button>
+          <button type="button" onclick="cancelLeaveEdit()">Cancel</button>
+        </form>
+      </div>
+
+      <button onclick="fetchLeaves()">Reload Leave Records</button>
+    </div>
+
+    <!-- Salary Sheet Section -->
+    <div id="salary" class="section" style="display: none;">
+      <h2>Salary Sheet</h2>
+      <div class="form-container salary-form">
+        <form id="salaryReportForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="salaryMonth">Month</label>
+              <input type="number" id="salaryMonth" min="1" max="12" required placeholder="Enter month (1-12)" />
+            </div>
+            <div class="form-group">
+              <label for="salaryYear">Year</label>
+              <input type="number" id="salaryYear" min="2000" max="2100" required placeholder="Enter year" />
+            </div>
+          </div>
+          <button type="submit" class="generate-btn">Generate Report</button>
+        </form>
+      </div>
+      <div class="table-container">
+        <table id="salaryTable">
+          <thead>
+            <tr>
+              <th>Employee Code</th>
+              <th>Employee Name</th>
+              <th>Department</th>
+              <th>Base Salary</th>
+              <th>Leave Days</th>
+              <th>Salary</th>
+              <th>TA</th>
+              <th>DA</th>
+              <th>Total Salary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dynamic content -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- User Management Section (Admin Only) -->
+    <div id="users" class="section admin-only" style="display: none;">
+      <h2>User Management</h2>
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+      
+      <div class="form-container">
+        <h3>Add New User</h3>
+        <form id="userForm">
+          <div class="form-group">
+            <label for="newUsername">Username</label>
+            <input type="text" id="newUsername" required />
+          </div>
+          <div class="form-group">
+            <label for="newPassword">Password</label>
+            <input type="password" id="newPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="newRole">Role</label>
+            <select id="newRole" required>
+              <option value="USER">User</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+          </div>
+          <button type="submit">Add User</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add login form handler
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const response = await fetch("/myapp/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const role = await response.text();
+      
+      if (role !== "Invalid credentials") {
+        localStorage.setItem('username', username);
+        localStorage.setItem('userRole', role);
+        
+        // Show/hide admin features
+        const adminFeatures = document.querySelectorAll('.admin-only');
+        adminFeatures.forEach(feature => {
+          feature.style.display = role === 'ADMIN' ? 'block' : 'none';
+        });
+
+        // Show username and logout button
+        document.getElementById('userInfo').textContent = `Welcome, ${username} (${role})`;
+        
+        // Show dashboard and initialize
+        showSection('dashboard');
+        showSection('employees');
+        
+        // Set default values for salary report
+        const now = new Date();
+        document.getElementById("salaryMonth").value = now.getMonth() + 1;
+        document.getElementById("salaryYear").value = now.getFullYear();
+      } else {
+        alert("Invalid credentials");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Error during login");
+    }
+  });
+
+  // Modify showSection function to handle dashboard
+  function showSection(sectionId) {
+    // Hide all sections first
+    document.querySelectorAll('.section').forEach(section => {
+      section.style.display = 'none';
+    });
+    
+    // Show the selected section
+    document.getElementById(sectionId).style.display = 'block';
+
+    // If showing a section within dashboard, make sure dashboard is visible
+    if (sectionId !== 'login' && sectionId !== 'dashboard') {
+      document.getElementById('dashboard').style.display = 'block';
+    }
+
+    // Load section-specific data
+    if (sectionId === 'departments') {
+      fetchDepartments();
+    } else if (sectionId === 'leaves') {
+      populateEmployeeSelects();
+      fetchLeaves();
+    } else if (sectionId === 'employees') {
+      populateDepartmentDropdowns();
+      populateStateDropdowns();
+      fetchEmployees();
+    } else if (sectionId === 'users') {
+      fetchUsers();
+    }
+  }
+
+  // Add a flag to track if data is being loaded
+  let isLoading = false;
+
+  async function fetchEmployees() {
+    // Prevent multiple simultaneous loads
+    if (isLoading) return;
+    isLoading = true;
+
+    try {
+      const response = await fetch("/myapp/employees/list");
+      const employees = await response.json();
+      const tbody = document.querySelector("#employeeTable tbody");
+      
+      // Clear existing content
+      tbody.innerHTML = "";
+
+      // First fetch all departments to create a lookup map
+      const deptResponse = await fetch("/myapp/departments/list");
+      const departments = await deptResponse.json();
+      const deptMap = new Map(departments.map(dept => [dept.id, dept.name]));
+
+      employees.forEach(emp => {
+        const row = document.createElement("tr");
+        const deptName = emp.departmentId ? deptMap.get(emp.departmentId) : 'N/A';
+        row.innerHTML = `
+          <td>${emp.id}</td>
+          <td>${emp.code || 'N/A'}</td>
+          <td>${emp.name}</td>
+          <td>${emp.dob ? new Date(emp.dob).toLocaleDateString() : 'N/A'}</td>
+          <td>${emp.contactNo || 'N/A'}</td>
+          <td>${emp.baseSalary}</td>
+          <td>${deptName}</td>
+          <td>
+            <button onclick="editEmployee(${emp.id}, '${emp.code}', '${emp.name}', '${emp.dob}', '${emp.contactNo}', '${emp.address1}', '${emp.address2}', '${emp.address3}', '${emp.pincode}', ${emp.stateId}, ${emp.baseSalary}, ${emp.departmentId})">Edit</button>
+            <button onclick="deleteEmployee(${emp.id})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    } catch (err) {
+      console.error("Error loading employees", err);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  async function deleteEmployee(id) {
+    if (!confirm("Are you sure you want to delete this employee?")) return;
+    try {
+      const res = await fetch(`/myapp/employees/delete/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert("Employee deleted successfully!");
+        fetchEmployees();
+      } else {
+        alert("Failed to delete employee.");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  }
+
+  function editEmployee(id, code, name, dob, contact, address1, address2, address3, pincode, stateId, salary, deptId) {
+    document.getElementById("editEmpId").value = id;
+    document.getElementById("editEmpCode").value = code;
+    document.getElementById("editEmpName").value = name;
+    document.getElementById("editEmpDob").value = dob ? dob.split('T')[0] : '';
+    document.getElementById("editEmpContact").value = contact;
+    document.getElementById("editEmpAddress1").value = address1;
+    document.getElementById("editEmpAddress2").value = address2;
+    document.getElementById("editEmpAddress3").value = address3;
+    document.getElementById("editEmpPincode").value = pincode;
+    document.getElementById("editEmpStateId").value = stateId;
+    document.getElementById("editEmpSalary").value = salary;
+    document.getElementById("editEmpDeptId").value = deptId;
+    
+    document.getElementById("employeeForm").parentElement.style.display = "none";
+    document.getElementById("editFormContainer").style.display = "block";
+  }
+
+  function cancelEdit() {
+    document.getElementById("editEmployeeForm").reset();
+    document.getElementById("editFormContainer").style.display = "none";
+    document.getElementById("employeeForm").parentElement.style.display = "block";
+  }
+
+  document.getElementById("editEmployeeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("editEmpId").value;
+    const code = document.getElementById("editEmpCode").value;
+    const name = document.getElementById("editEmpName").value;
+    const dob = document.getElementById("editEmpDob").value;
+    const contactNo = document.getElementById("editEmpContact").value;
+    const address1 = document.getElementById("editEmpAddress1").value;
+    const address2 = document.getElementById("editEmpAddress2").value;
+    const address3 = document.getElementById("editEmpAddress3").value;
+    const pincode = document.getElementById("editEmpPincode").value;
+    const stateId = parseInt(document.getElementById("editEmpStateId").value);
+    const baseSalary = parseFloat(document.getElementById("editEmpSalary").value);
+    const departmentId = parseInt(document.getElementById("editEmpDeptId").value);
+    
+    const employeeData = { 
+      code, name, dob, contactNo, address1, address2, address3, 
+      pincode, stateId, baseSalary, departmentId 
+    };
+
+    try {
+      const res = await fetch(`/myapp/employees/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(employeeData)
+      });
+
+      if (res.ok) {
+        alert("Employee updated successfully!");
+        cancelEdit();
+        fetchEmployees();
+      } else {
+        alert("Failed to update employee.");
+      }
+    } catch (err) {
+      console.error("Update employee error:", err);
+      alert("Error updating employee: " + err.message);
+    }
+  });
+
+  document.getElementById("employeeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const code = document.getElementById("empCode").value;
+    const name = document.getElementById("empName").value;
+    const dob = document.getElementById("empDob").value;
+    const contactNo = document.getElementById("empContact").value;
+    const address1 = document.getElementById("empAddress1").value;
+    const address2 = document.getElementById("empAddress2").value;
+    const address3 = document.getElementById("empAddress3").value;
+    const pincode = document.getElementById("empPincode").value;
+    const stateId = parseInt(document.getElementById("empStateId").value);
+    const baseSalary = parseFloat(document.getElementById("empSalary").value);
+    const departmentId = parseInt(document.getElementById("empDeptId").value);
+    
+    const employeeData = { 
+      code, name, dob, contactNo, address1, address2, address3, 
+      pincode, stateId, baseSalary, departmentId 
+    };
+
+    try {
+      const res = await fetch("/myapp/employees/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(employeeData)
+      });
+
+      if (res.ok) {
+        alert("Employee added successfully!");
+        document.getElementById("employeeForm").reset();
+        fetchEmployees();
+      } else {
+        alert("Failed to add employee.");
+      }
+    } catch (err) {
+      console.error("Add employee error:", err);
+    }
+  });
+
+  // Department functions
+  async function fetchDepartments() {
+    try {
+      const response = await fetch("/myapp/departments/list");
+      const departments = await response.json();
+      const tbody = document.querySelector("#departmentTable tbody");
+      tbody.innerHTML = "";
+
+      departments.forEach(dept => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${dept.id}</td>
+          <td>${dept.name}</td>
+          <td>
+            <button onclick="editDepartment(${dept.id}, '${dept.name}')">Edit</button>
+            <button onclick="deleteDepartment(${dept.id})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    } catch (err) {
+      console.error("Error loading departments", err);
+      alert("Error loading departments");
+    }
+  }
+
+  async function deleteDepartment(id) {
+    if (!confirm("Are you sure you want to delete this department?")) return;
+    
+    try {
+      const res = await fetch(`/myapp/departments/delete/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert("Department deleted successfully!");
+        fetchDepartments();
+      } else {
+        const error = await res.text();
+        if (error.includes("active employees")) {
+          alert("Cannot delete department: There are active employees in this department. Please reassign or remove these employees first.");
+        } else {
+          alert("Cannot delete department: There are active employees in this department. Please reassign or remove these employees first.");
+        }
+      }
+    } catch (err) {
+      console.error("Delete department error:", err);
+      alert("Error deleting department");
+    }
+  }
+
+  function editDepartment(id, name) {
+    document.getElementById("editDeptId").value = id;
+    document.getElementById("editDeptName").value = name;
+    
+    document.getElementById("departmentForm").parentElement.style.display = "none";
+    document.getElementById("editDeptFormContainer").style.display = "block";
+  }
+
+  function cancelDeptEdit() {
+    document.getElementById("editDepartmentForm").reset();
+    document.getElementById("editDeptFormContainer").style.display = "none";
+    document.getElementById("departmentForm").parentElement.style.display = "block";
+  }
+
+  document.getElementById("departmentForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("deptName").value;
+    const departmentData = { name };
+
+    try {
+      const res = await fetch("/myapp/departments/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(departmentData)
+      });
+
+      if (res.ok) {
+        alert("Department added successfully!");
+        document.getElementById("departmentForm").reset();
+        fetchDepartments();
+      } else {
+        alert("Failed to add department");
+      }
+    } catch (err) {
+      console.error("Add department error:", err);
+      alert("Error adding department");
+    }
+  });
+
+  document.getElementById("editDepartmentForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("editDeptId").value;
+    const name = document.getElementById("editDeptName").value;
+    const departmentData = { name };
+
+    try {
+      const res = await fetch(`/myapp/departments/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(departmentData)
+      });
+
+      if (res.ok) {
+        alert("Department updated successfully!");
+        cancelDeptEdit();
+        fetchDepartments();
+      } else {
+        alert("Failed to update department");
+      }
+    } catch (err) {
+      console.error("Update department error:", err);
+      alert("Error updating department");
+    }
+  });
+
+  // Leave functions
+  async function fetchLeaves() {
+    try {
+      const response = await fetch("/myapp/leaves/list");
+      const leaves = await response.json();
+      const tbody = document.querySelector("#leaveTable tbody");
+      tbody.innerHTML = "";
+
+      for (const leave of leaves) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${leave.id}</td>
+          <td>${leave.employee ? leave.employee.name : 'N/A'}</td>
+          <td>${new Date(leave.leaveDate).toLocaleDateString()}</td>
+          <td>${leave.halfdayYN === 'Y' ? 'Yes' : 'No'}</td>
+          <td>${leave.remarks || 'N/A'}</td>
+          <td>
+            <button onclick="editLeave(${leave.id}, ${leave.employee.id}, '${leave.leaveDate}', '${leave.remarks}', '${leave.halfdayYN}')">Edit</button>
+            <button onclick="deleteLeave(${leave.id})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      }
+    } catch (err) {
+      console.error("Error loading leaves", err);
+      alert("Error loading leave records");
+    }
+  }
+
+  async function populateEmployeeSelects() {
+    try {
+      const response = await fetch("/myapp/employees/list");
+      const employees = await response.json();
+      const selects = ['leaveEmployeeId', 'editLeaveEmployeeId'];
+      
+      selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Select Employee</option>';
+        employees.forEach(emp => {
+          select.innerHTML += `<option value="${emp.id}">${emp.name}</option>`;
+        });
+      });
+    } catch (err) {
+      console.error("Error loading employees for select", err);
+    }
+  }
+
+  async function deleteLeave(id) {
+    if (!confirm("Are you sure you want to delete this leave record?")) return;
+    
+    try {
+      const res = await fetch(`/myapp/leaves/delete/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert("Leave record deleted successfully!");
+        fetchLeaves();
+      } else {
+        const error = await res.text();
+        alert("Failed to delete leave record: " + error);
+      }
+    } catch (err) {
+      console.error("Delete leave error:", err);
+      alert("Error deleting leave record");
+    }
+  }
+
+  function editLeave(id, employeeId, date, remarks, halfdayYN) {
+    document.getElementById("editLeaveId").value = id;
+    document.getElementById("editLeaveEmployeeId").value = employeeId;
+    document.getElementById("editLeaveDate").value = date.split('T')[0];
+    document.getElementById("editLeaveRemarks").value = remarks;
+    document.getElementById("editLeaveHalfDay").checked = halfdayYN === 'Y';
+    
+    document.getElementById("leaveForm").parentElement.style.display = "none";
+    document.getElementById("editLeaveFormContainer").style.display = "block";
+  }
+
+  function cancelLeaveEdit() {
+    document.getElementById("editLeaveForm").reset();
+    document.getElementById("editLeaveFormContainer").style.display = "none";
+    document.getElementById("leaveForm").parentElement.style.display = "block";
+  }
+
+  document.getElementById("leaveForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const employeeId = document.getElementById("leaveEmployeeId").value;
+    const date = document.getElementById("leaveDate").value;
+    const remarks = document.getElementById("leaveRemarks").value;
+    const halfdayYN = document.getElementById("leaveHalfDay").checked ? 'Y' : 'N';
+    
+    const leaveData = {
+      employee: { id: parseInt(employeeId) },
+      leaveDate: date,
+      remarks: remarks,
+      halfdayYN: halfdayYN
+    };
+
+    try {
+      const res = await fetch("/myapp/leaves/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(leaveData)
+      });
+
+      if (res.ok) {
+        alert("Leave record added successfully!");
+        document.getElementById("leaveForm").reset();
+        fetchLeaves();
+      } else {
+        alert("Failed to add leave record");
+      }
+    } catch (err) {
+      console.error("Add leave error:", err);
+      alert("Error adding leave record");
+    }
+  });
+
+  document.getElementById("editLeaveForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("editLeaveId").value;
+    const employeeId = document.getElementById("editLeaveEmployeeId").value;
+    const date = document.getElementById("editLeaveDate").value;
+    const remarks = document.getElementById("editLeaveRemarks").value;
+    const halfdayYN = document.getElementById("editLeaveHalfDay").checked ? 'Y' : 'N';
+    
+    const leaveData = {
+      employee: { id: parseInt(employeeId) },
+      leaveDate: date,
+      remarks: remarks,
+      halfdayYN: halfdayYN
+    };
+
+    try {
+      const res = await fetch(`/myapp/leaves/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(leaveData)
+      });
+
+      if (res.ok) {
+        alert("Leave record updated successfully!");
+        cancelLeaveEdit();
+        fetchLeaves();
+      } else {
+        alert("Failed to update leave record");
+      }
+    } catch (err) {
+      console.error("Update leave error:", err);
+      alert("Error updating leave record");
+    }
+  });
+
+  // Add this new function to populate department dropdowns
+  async function populateDepartmentDropdowns() {
+    try {
+      const response = await fetch("/myapp/departments/list");
+      const departments = await response.json();
+      const selects = ['empDeptId', 'editEmpDeptId'];
+      
+      selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Select Department</option>';
+        departments.forEach(dept => {
+          select.innerHTML += `<option value="${dept.id}">${dept.name}</option>`;
+        });
+      });
+    } catch (err) {
+      console.error("Error loading departments for select", err);
+    }
+  }
+
+  // Add this new function to populate state dropdowns
+  async function populateStateDropdowns() {
+    try {
+      const response = await fetch("/myapp/states/list");
+      const states = await response.json();
+      const selects = ['empStateId', 'editEmpStateId'];
+      
+      selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Select State</option>';
+        states.forEach(state => {
+          select.innerHTML += `<option value="${state.id}">${state.name}</option>`;
+        });
+      });
+    } catch (err) {
+      console.error("Error loading states for select", err);
+    }
+  }
+
+  // Add this new function to handle salary report
+  document.getElementById("salaryReportForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const month = document.getElementById("salaryMonth").value;
+    const year = document.getElementById("salaryYear").value;
+    
+    try {
+      const response = await fetch(`/myapp/api/salary/report?month=${month}&year=${year}`);
+      const data = await response.json();
+      const tbody = document.querySelector("#salaryTable tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(emp => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${emp.empcode}</td>
+          <td>${emp.empname}</td>
+          <td>${emp.department}</td>
+          <td>${emp.base_salary.toFixed(2)}</td>
+          <td>${emp.leave_days}</td>
+          <td>${emp.salary.toFixed(2)}</td>
+          <td>${emp.ta.toFixed(2)}</td>
+          <td>${emp.da.toFixed(2)}</td>
+          <td>${emp.total_salary.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    } catch (err) {
+      console.error("Error loading salary report:", err);
+      alert("Error loading salary report");
+    }
+  });
+
+  // Add these new functions for user management
+  async function fetchUsers() {
+    try {
+      const response = await fetch("/myapp/api/users/list");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const users = await response.json();
+      const tbody = document.querySelector("#userTable tbody");
+      tbody.innerHTML = "";
+
+      users.forEach(user => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.username}</td>
+          <td>${user.role}</td>
+          <td>
+            <button onclick="deleteUser(${user.id})" ${user.username === localStorage.getItem('username') ? 'disabled' : ''}>Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    } catch (err) {
+      console.error("Error loading users:", err);
+      alert("Error loading users: " + err.message);
+    }
+  }
+
+  async function deleteUser(id) {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+    
+    try {
+      const adminUsername = localStorage.getItem('username');
+      const res = await fetch(`/myapp/api/users/delete/${id}?adminUsername=${adminUsername}`, {
+        method: 'DELETE'
+      });
+      
+      const message = await res.text();
+      if (res.ok) {
+        alert(message);
+        fetchUsers();
+      } else {
+        alert(message || "Failed to delete user");
+      }
+    } catch (err) {
+      console.error("Delete user error:", err);
+      alert("Error deleting user: " + err.message);
+    }
+  }
+
+  document.getElementById("userForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("newUsername").value;
+    const password = document.getElementById("newPassword").value;
+    const role = document.getElementById("newRole").value;
+    const adminUsername = localStorage.getItem('username');
+    
+    const userData = { username, password, role };
+
+    try {
+      const res = await fetch(`/myapp/api/users/add?adminUsername=${adminUsername}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData)
+      });
+
+      const message = await res.text();
+      if (res.ok) {
+        alert(message);
+        document.getElementById("userForm").reset();
+        fetchUsers();
+      } else {
+        alert(message || "Failed to add user");
+      }
+    } catch (err) {
+      console.error("Add user error:", err);
+      alert("Error adding user: " + err.message);
+    }
+  });
+</script>
+</body>
+</html>

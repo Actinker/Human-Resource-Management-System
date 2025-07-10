@@ -1,0 +1,531 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #0c7ff2;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #0c7ff2;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.button-group button {
+    background-color: #0c7ff2;
+    color: white;
+    padding: 12px 24px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+}
+
+.button-group button:hover {
+    background-color: #095ecb;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #0c7ff2;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+tr:hover {
+    background-color: #f1f5f9;
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container input[type="date"],
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+    background-color: white;
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="number"]:focus,
+.form-container input[type="date"]:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: #0c7ff2;
+    box-shadow: 0 0 0 2px rgba(12, 127, 242, 0.1);
+}
+
+.form-container input[type="text"]::placeholder,
+.form-container input[type="number"]::placeholder,
+.form-container textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-container input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.form-container input[type="number"]::-webkit-outer-spin-button,
+.form-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Form group styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+/* Checkbox group styles */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #0c7ff2;
+}
+
+.checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+/* Form container styles */
+.form-container {
+    margin: 25px 0;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-container h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #0c7ff2;
+    font-size: 1.4em;
+}
+
+/* Form group styles */
+.form-group {
+    margin-bottom: 25px;
+    max-width: 600px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container input[type="date"],
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 14px;
+    margin: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.form-container textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="number"]:focus,
+.form-container input[type="date"]:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: #0c7ff2;
+    box-shadow: 0 0 0 3px rgba(12, 127, 242, 0.1);
+}
+
+.form-container input[type="text"]::placeholder,
+.form-container input[type="number"]::placeholder,
+.form-container textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-container input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.form-container input[type="number"]::-webkit-outer-spin-button,
+.form-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Checkbox group styles */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 5px 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #0c7ff2;
+}
+
+.checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+/* Button styles */
+.form-container button {
+    padding: 14px 28px;
+    background-color: #0c7ff2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    margin: 10px 5px;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.form-container button:hover {
+    background-color: #095ecb;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-container button[type="button"] {
+    background-color: #64748b;
+}
+
+.form-container button[type="button"]:hover {
+    background-color: #475569;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background-color: #0c7ff2;
+    color: white;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+td {
+    font-size: 0.95em;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Action buttons in table */
+td button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+td button:first-child {
+    background-color: #0c7ff2;
+    color: white;
+}
+
+td button:last-child {
+    background-color: #ef4444;
+    color: white;
+}
+
+td button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+td button:first-child:hover {
+    background-color: #095ecb;
+}
+
+td button:last-child:hover {
+    background-color: #dc2626;
+}
+
+/* Reload button specific styles */
+button[onclick="fetchEmployees()"],
+button[onclick="fetchDepartments()"],
+button[onclick="fetchLeaves()"] {
+    background-color: #10b981;
+    color: white;
+    padding: 12px 24px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+}
+
+button[onclick="fetchEmployees()"]:hover,
+button[onclick="fetchDepartments()"]:hover,
+button[onclick="fetchLeaves()"]:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+button[onclick="fetchEmployees()"]:active,
+button[onclick="fetchDepartments()"]:active,
+button[onclick="fetchLeaves()"]:active {
+    transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
+        margin: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container input[type="date"],
+    .form-container select,
+    .form-container textarea {
+        padding: 12px;
+    }
+
+    .form-container button {
+        padding: 12px 24px;
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .container {
+        margin: 15px;
+        padding: 15px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group button {
+        width: 100%;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+/* Salary section specific styles */
+.salary-form {
+  max-width: 600px !important;
+  margin: 0 auto 30px auto !important;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.generate-btn {
+  background-color: #0c7ff2;
+  color: white;
+  padding: 12px 24px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-size: 1em;
+}
+
+.generate-btn:hover {
+  background-color: #095ecb;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#salaryTable {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#salaryTable th {
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#salaryTable td {
+  white-space: nowrap;
+}
+
+#salaryTable td:nth-child(4),
+#salaryTable td:nth-child(5),
+#salaryTable td:nth-child(6),
+#salaryTable td:nth-child(7),
+#salaryTable td:nth-child(8),
+#salaryTable td:nth-child(9) {
+  text-align: right;
+}
+
