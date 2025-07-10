@@ -101,4 +101,20 @@ Open your browser at:
 
 ---
 
+## 🖼️ Screenshots
+
+### 🔐 Login Page
+<img width="1365" height="767" alt="Login Page" src="https://github.com/user-attachments/assets/a0ab3ba5-af91-41fb-8e50-1a4ab4cb8dc7" />
+
+### 👥 Employees Management
+<img width="1348" height="767" alt="Employees Page" src="https://github.com/user-attachments/assets/d69cabbe-191e-4d21-969d-36a77826d685" />
+
+### 🏢 Department Management
+<img width="1348" height="767" alt="Department Page" src="https://github.com/user-attachments/assets/58661a6d-c2a6-4ed0-87d2-8944eed94bd1" />
+
+### 💰 Salary Report Generation
+<img width="1346" height="766" alt="Salary Report Page" src="https://github.com/user-attachments/assets/2cb9b0fa-dbb6-4e2e-aadc-605ccc5caa23" />
+
+---
+
 🔗 Made with ❤️
